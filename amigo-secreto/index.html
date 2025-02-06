@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Secreto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Amigo Secreto</h1>
+    <p>Ingresa los nombres de los participantes, uno por línea:</p>
+    <textarea id="participantes" placeholder="Ejemplo:
+Alice
+Bob
+Charlie
+Diana"></textarea>
+    <button onclick="asignarAmigosSecretos()">Asignar Amigos Secretos</button>
+    <div id="resultado"></div>
+
+    <script>
+        // Función para asignar amigos secretos
+        function asignarAmigosSecretos() {
+            // Obtener los nombres de los participantes desde el textarea
+            const participantes = document.getElementById("participantes").value.split("\n").map(nombre => nombre.trim()).filter(nombre => nombre !== "");
+
+            // Validar que haya al menos 2 participantes
+            if (participantes.length < 2) {
+                alert("Debe haber al menos 2 participantes.");
+                return;
+            }
+
+            // Copia de la lista de participantes para no modificar la original
+            let lista = [...participantes];
+
+            // Objeto para almacenar las asignaciones
+            let asignaciones = {};
+
+            // Recorremos la lista de participantes
+            for (let i = 0; i < participantes.length; i++) {
+                // Filtramos la lista para excluir al propio participante
+                let opciones = lista.filter(nombre => nombre !== participantes[i]);
+
+                // Seleccionamos un amigo secreto al azar
+                let amigoSecreto = opciones[Math.floor(Math.random() * opciones.length)];
+
+                // Asignamos el amigo secreto
+                asignaciones[participantes[i]] = amigoSecreto;
+
+                // Eliminamos al amigo secreto de la lista para que no sea asignado de nuevo
+                lista = lista.filter(nombre => nombre !== amigoSecreto);
+            }
+
+            // Mostrar las asignaciones en el HTML
+            const resultadoDiv = document.getElementById("resultado");
+            resultadoDiv.innerHTML = "<h2>Asignaciones de Amigos Secretos:</h2>";
+            for (let participante in asignaciones) {
+                resultadoDiv.innerHTML += `<p><strong>${participante}</strong> -> ${asignaciones[participante]}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
